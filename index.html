@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🛒 Mi Lista de Compras</title>
+    
+    <!-- Meta tags específicos para la vista previa de WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🛒 Mi Lista de Compras">
+    <meta property="og:description" content="Sincroniza tus compras en tiempo real entre todos tus dispositivos.">
+    <meta property="og:image" content="https://github.io">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
@@ -39,7 +49,6 @@
                 navigator.serviceWorker.register('sw.js')
                     .then(reg => {
                         console.log('Service Worker registrado con éxito');
-                        // Forzar actualización si hay cambios en el sw.js
                         reg.update();
                     })
                     .catch(err => console.error('Error al registrar el SW:', err));
