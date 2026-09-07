@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // C. Creamos el botón de borrar con el texto "delete" en rosa
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-btn';
-            deleteBtn.textContent = 'delete';
+            deleteBtn.textContent = 'Borrar';
             deleteBtn.addEventListener('click', () => deleteItem(item.id));
 
             // 🔥 EL ORDEN DE LA IMAGEN #2:
