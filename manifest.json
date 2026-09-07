@@ -1,0 +1,25 @@
+{
+  "name": "Mi Lista de Compras",
+  "short_name": "Mis Compras",
+  "start_url": "/Mis-compras/index.html",
+  "scope": "/Mis-compras/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#198754",
+  "icons": [
+    {
+      "src": "image/Carrito-transformed.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "image/Carrito-transformed.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
+
+
