@@ -6,7 +6,8 @@
     <title>🛒 Mi Lista de Compras</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
-    <link href="https://googleapis.com" rel="stylesheet">
+<link href="https://googleapis.com" rel="stylesheet">
+S
 </head>
 <body>
     <div class="app-container">
@@ -29,7 +30,19 @@
         <ul id="shopping-list"></ul>
     </div>
 
-    <!-- Volvemos al script clásico sin módulos complejos -->
+    <!-- Script clásico de la aplicación -->
     <script src="app.js"></script>
+
+    <!-- Registro estándar del Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito'))
+                    .catch(err => console.error('Error al registrar el SW:', err));
+            });
+        }
+    </script>
 </body>
 </html>
+
