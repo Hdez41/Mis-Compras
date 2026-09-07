@@ -1,167 +1,133 @@
-/* ==========================================
-   CONFIGURACIÓN GENERAL Y FUENTES
-   ========================================== */
-@import url('https://googleapis.com');
-
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
-    background-color: #f7f9fc;
+    background-color: #f6f8fa;
+    margin: 0;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
     padding: 20px;
 }
 
-/* 🛠️ SOLUCIÓN PARA LOS ICONOS: Fuerza a las palabras a transformarse en símbolos */
-.material-icons {
-    font-family: 'Material Icons' !important;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-smoothing: antialiased;
-}
-
-/* ==========================================
-   CONTENEDOR PRINCIPAL
-   ========================================== */
 .app-container {
-    background: #ffffff;
+    background: white;
     width: 100%;
-    max-width: 450px;
-    padding: 20px;
-    border-radius: 20px;
+    max-width: 400px;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
 
-.app-header {
-    text-align: center;
+header h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1a1a1a;
+    font-size: 24px;
+    margin-top: 0;
+    justify-content: center;
+}
+
+header .material-icons {
+    color: #28a745;
+    font-size: 28px;
+}
+
+.input-container {
+    display: flex;
+    gap: 12px;
     margin-bottom: 20px;
 }
 
-.app-header h1 {
-    font-size: 32px;
-    color: #1a1a1a;
-    font-weight: 600;
-    margin-bottom: 15px;
-}
-
-.image-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-}
-
-.image-container img {
-    width: 100%;
-    max-width: 380px;
-    height: auto;
-}
-
-/* ==========================================
-   FORMULARIO DE ENTRADA (INPUT Y BOTÓN ADD)
-   ========================================== */
-.input-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-#item-input {
+input {
     flex: 1;
-    padding: 18px 20px;
-    border: 1.5px solid #d1d5db;
-    border-radius: 16px;
+    padding: 14px;
+    border: 2px solid #e1e4e6;
+    border-radius: 12px;
     font-size: 16px;
-    color: #333333;
     outline: none;
-    background-color: #ffffff;
+    transition: border-color 0.2s;
 }
 
-#item-input::placeholder {
-    color: #9ca3af;
+input:focus {
+    border-color: #28a745;
 }
 
-#add-btn {
-    background-color: #198754;
+button {
+    background: #28a745;
     color: white;
     border: none;
-    border-radius: 16px;
-    width: 60px;
-    height: 60px;
+    border-radius: 12px;
+    padding: 0 16px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
 }
 
-/* ==========================================
-   LISTA DE COMPRAS (TARJETAS COMO LA FOTO 1)
-   ========================================== */
-#shopping-list {
+button:hover {
+    background: #218838;
+}
+
+ul {
     list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    padding: 0;
+    margin: 0;
 }
 
-.todo-item {
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
-    padding: 20px;
-    border-radius: 16px;
+li {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #edf0f2;
 }
 
-/* Checkbox estilizado (Cuadrado morado de tu app) */
-.todo-item input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    accent-color: #7c3aed; /* Color morado como se ve en la imagen original */
-    cursor: pointer;
-    margin-right: 18px;
-}
-
-/* Texto del Producto */
-.todo-item span {
+.item-text {
     flex: 1;
-    font-size: 18px;
-    color: #1f2937;
-    font-weight: 400;
+    margin-left: 12px;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
 }
 
-/* Estilo si está completado */
-.todo-item.completed span {
+/* Estilo para productos ya comprados/tachados */
+li.completed {
+    opacity: 0.6;
+}
+
+li.completed .item-text {
     text-decoration: line-through;
-    color: #9ca3af;
+    color: #888;
 }
 
-/* Botón Delete (Ubicado a la derecha en color magenta/rojo sutil) */
+.checkbox-icon {
+    font-family: 'Material Icons'; /* Indica al navegador que cargue el icono gráfico */
+    font-size: 24px;               /* Tamaño ideal para que se vea claro en celulares */
+    cursor: pointer;
+    color: #adb5bd;                /* Color gris cuando no está seleccionado */
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+/* Color verde cuando el producto ya está comprado */
+.checkbox-icon.checked {
+    color: #198754; 
+}
+
+
 .delete-btn {
     background: none;
-    border: none;
-    color: #db2777; /* Tono magenta/rojo idéntico al de tu primera foto */
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 400;
-    padding: 4px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #dc3545;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.delete-btn:hover {
+    background: #ffeef0;
 }
