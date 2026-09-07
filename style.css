@@ -54,23 +54,26 @@ body {
 }
 
 /* ==========================================
-   BARRA DE ENTRADA (INPUT Y BOTÓN ADD)
+   BARRA DE ENTRADA RESPONSIVE (INPUT Y BOTÓN)
    ========================================== */
 .input-container {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 25px;
+    width: 100%;
 }
 
 #item-input {
     flex: 1;
+    min-width: 0; /* Evita que el input empuje los elementos hacia afuera en móviles */
     padding: 18px 20px;
     border: 1.5px solid #ced4da;
     border-radius: 16px;
     font-size: 18px;
     color: #495057;
     outline: none;
+    width: 100%;
 }
 
 #item-input::placeholder {
@@ -89,6 +92,7 @@ body {
     justify-content: center;
     font-size: 18px;
     cursor: pointer;
+    flex-shrink: 0; /* Fuerza al botón a mantener su tamaño cuadrado */
 }
 
 /* ==========================================
@@ -169,4 +173,19 @@ body {
     cursor: pointer;
     flex-shrink: 0;
     padding-left: 10px;
+}
+
+/* ==========================================
+   📱 ADAPTACIÓN PARA CELULARES MUY PEQUEÑOS
+   ========================================== */
+@media (max-width: 360px) {
+    .input-container {
+        flex-direction: column;    /* Pone el botón debajo del input si falta espacio */
+        align-items: stretch;
+    }
+    
+    #add-btn {
+        width: 100%;               /* El botón se adapta a todo el ancho disponible */
+        height: 50px;
+    }
 }
