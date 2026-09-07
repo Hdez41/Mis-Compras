@@ -1,133 +1,191 @@
+/* ==========================================
+   CONFIGURACIÓN GENERAL Y FUENTES
+   ========================================== */
+@import url('https://googleapis.com');
+
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background-color: #f6f8fa;
-    margin: 0;
+    background-color: #f7f9fc;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
     padding: 20px;
 }
 
-.app-container {
-    background: white;
-    width: 100%;
-    max-width: 400px;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-}
-
-header h1 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #1a1a1a;
+/* REGLA CRUCIAL: Fuerza a los textos "add" y "delete" a convertirse en iconos reales */
+.material-icons {
+    font-family: 'Material Icons' !important;
+    font-weight: normal;
+    font-style: normal;
     font-size: 24px;
-    margin-top: 0;
-    justify-content: center;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
 }
 
-header .material-icons {
-    color: #28a745;
+/* ==========================================
+   CONTENEDOR PRINCIPAL DE LA APP
+   ========================================== */
+.app-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    padding: 25px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.app-header h1 {
     font-size: 28px;
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 15px;
 }
 
+.image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.image-container img {
+    max-width: 85%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* ==========================================
+   ZONA DE ENTRADA DE DATOS (INPUT & BOTÓN)
+   ========================================== */
 .input-container {
     display: flex;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-input {
+#item-input {
     flex: 1;
-    padding: 14px;
-    border: 2px solid #e1e4e6;
-    border-radius: 12px;
+    padding: 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
     font-size: 16px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s ease;
+    background-color: #f8fafc;
 }
 
-input:focus {
-    border-color: #28a745;
+#item-input:focus {
+    border-color: #198754;
+    background-color: #ffffff;
 }
 
-button {
-    background: #28a745;
+#add-btn {
+    background-color: #198754;
     color: white;
     border: none;
-    border-radius: 12px;
-    padding: 0 16px;
-    cursor: pointer;
+    border-radius: 16px;
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-button:hover {
-    background: #218838;
+#add-btn:hover {
+    background-color: #146c43;
+    transform: scale(1.03);
 }
 
-ul {
+/* ==========================================
+   ESTRUCTURA DE LA LISTA DE COMPRAS
+   ========================================== */
+#shopping-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-li {
+.todo-item {
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    padding: 16px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    border: 1px solid #edf0f2;
+    transition: all 0.2s ease;
 }
 
-.item-text {
+.todo-item:hover {
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border-color: #e2e8f0;
+}
+
+/* Checkbox estilizado integrado */
+.todo-item input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: #198754;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+/* Texto del producto */
+.todo-item span {
     flex: 1;
-    margin-left: 12px;
     font-size: 16px;
-    color: #333;
-    cursor: pointer;
-}
-
-/* Estilo para productos ya comprados/tachados */
-li.completed {
-    opacity: 0.6;
-}
-
-li.completed .item-text {
-    text-decoration: line-through;
-    color: #888;
-}
-
-.checkbox-icon {
-    font-family: 'Material Icons'; /* Indica al navegador que cargue el icono gráfico */
-    font-size: 24px;               /* Tamaño ideal para que se vea claro en celulares */
-    cursor: pointer;
-    color: #adb5bd;                /* Color gris cuando no está seleccionado */
-    user-select: none;
+    color: #334155;
+    font-weight: 500;
     transition: color 0.2s ease;
 }
 
-/* Color verde cuando el producto ya está comprado */
-.checkbox-icon.checked {
-    color: #198754; 
+/* Estado completado (Tachado) */
+.todo-item.completed {
+    background: #f1f5f9;
+    opacity: 0.7;
 }
 
+.todo-item.completed span {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
 
+/* Botón de eliminar (Icono de papelera) */
 .delete-btn {
     background: none;
-    color: #dc3545;
-    padding: 4px;
-    border-radius: 6px;
+    border: none;
+    color: #ef4444; /* Rojo elegante */
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .delete-btn:hover {
-    background: #ffeef0;
+    background-color: #fee2e2;
+    transform: scale(1.08);
 }
