@@ -1,133 +1,118 @@
-// ⚠️ REEMPLAZA ESTA URL CON TU URL DE GOOGLE APPS SCRIPT
-const URL_BACKEND = "https://script.google.com/macros/s/AKfycbyXHXIw6Q8z5c2-IwzHv6FCcsBup-mnC9h93wDumt7zN6WXUxZr3nY5ziBVrXlH9eYdWA/exec";
+// CONFIGURACIÓN: Reemplaza con la URL de ejecución de tu Web App de Google Apps Script
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyXHXIw6Q8z5c2-IwzHv6FCcsBup-mnC9h93wDumt7zN6WXUxZr3nY5ziBVrXlH9eYdWA/exec";
 
-const itemInput = document.getElementById("item-input");
-const addBtn = document.getElementById("add-btn");
-const shoppingList = document.getElementById("shopping-list");
+const itemInput = document.getElementById('item-input');
+const addBtn = document.getElementById('add-btn');
+const shoppingList = document.getElementById('shopping-list');
 
-// 1. CARGAR LA LISTA ACTUAL AL ABRIR LA APP
-async function cargarListaActual() {
-    shoppingList.innerHTML = "<li>Cargando lista actual...</li>";
+let listaLocal = []; // Almacena el estado actual para evitar parpadeos en la UI
+
+// Escuchadores de eventos
+addBtn.addEventListener('click', agregarItem);
+itemInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') agregarItem(); });
+
+// 1. OBTENER DATOS (doGet)
+async function cargarLista() {
     try {
-        const respuesta = await fetch(URL_BACKEND);
-        const productos = await respuesta.json();
+        const response = await fetch(WEB_APP_URL);
+        const datos = await response.json();
         
-        shoppingList.innerHTML = ""; 
-        
-        if (productos.length === 0) {
-            shoppingList.innerHTML = "<li class='empty-msg'>No hay artículos en la lista 🛒</li>";
+        if (datos.error) {
+            console.error("Error del backend:", datos.error);
             return;
         }
 
-        productos.forEach(item => {
-            renderizarArticulo(item);
-        });
+        // Solo repintar si los datos del servidor cambiaron para evitar parpadeos molestos
+        if (JSON.stringify(listaLocal) !== JSON.stringify(datos)) {
+            listaLocal = datos;
+            renderizarLista(datos);
+        }
     } catch (error) {
-        console.error("Error al conectar con la lista:", error);
-        shoppingList.innerHTML = "<li style='color: red;'>Error al conectar con la hoja de cálculo.</li>";
+        console.error("Error de conexión al sincronizar:", error);
     }
 }
 
-// 2. DIBUJAR CADA ELEMENTO EN LA PANTALLA
-function renderizarArticulo(item) {
-    const li = document.createElement("li");
-    li.dataset.id = item.id;
+// 2. RENDERIZAR EN PANTALLA
+function renderizarLista(items) {
+    shoppingList.innerHTML = '';
     
-    const contentDiv = document.createElement("div");
-    contentDiv.className = "item-content";
-
-    // Checkbox para tachar
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "item-checkbox";
-    
-    const estaEnProceso = (item.comprado === "en proceso" || item.comprado === true || item.comprado === "true");
-    checkbox.checked = estaEnProceso;
-    
-    const textSpan = document.createElement("span");
-    textSpan.className = "item-text";
-    textSpan.textContent = item.producto;
-    
-    if (estaEnProceso) {
-        li.classList.add("completed");
-    }
-
-    contentDiv.appendChild(checkbox);
-    contentDiv.appendChild(textSpan);
-
-    // Botón de borrar con tu icono de Google
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "delete-item-btn";
-    deleteBtn.innerHTML = "<span class='material-icons'>delete</span>";
-
-    li.appendChild(contentDiv);
-    li.appendChild(deleteBtn);
-    shoppingList.appendChild(li);
-
-    // EVENTO DE TACHADO: Se ve de inmediato y se guarda de fondo
-    checkbox.addEventListener("change", async () => {
-        if (checkbox.checked) {
-            li.classList.add("completed");
-        } else {
-            li.classList.remove("completed");
-        }
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = `todo-item ${item.comprado === 'en proceso' ? 'completed' : ''}`;
         
-        await fetch(URL_BACKEND, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: item.id, producto: item.producto, comprado: checkbox.checked })
-        });
-    });
+        // Checkbox para marcar estado
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = item.comprado === 'en proceso';
+        checkbox.addEventListener('change', () => alternarEstado(item.id, item.producto, checkbox.checked));
 
-    // EVENTO DE BORRADO: Se borra de inmediato de la pantalla y se procesa de fondo
-    deleteBtn.addEventListener("click", async () => {
-        li.remove();
-        if (shoppingList.children.length === 0) {
-            shoppingList.innerHTML = "<li class='empty-msg'>No hay artículos en la lista 🛒</li>";
-        }
-        
-        await fetch(URL_BACKEND, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: item.id, accion: "delete" })
-        });
+        // Texto del producto
+        const span = document.createElement('span');
+        span.textContent = item.producto;
+        if(checkbox.checked) span.style.textDecoration = 'line-through';
+
+        // Botón de eliminar
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = '<span class="material-icons">delete</span>';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.addEventListener('click', () => eliminarItem(item.id));
+
+        li.appendChild(checkbox);
+        li.appendChild(span);
+        li.appendChild(deleteBtn);
+        shoppingList.appendChild(li);
     });
 }
 
-// 3. AÑADIR NUEVO ARTÍCULO DESDE EL INPUT (Instantáneo)
-async function agregarNuevoProducto() {
-    const textoProducto = itemInput.value.trim();
-    if (textoProducto === "") return;
+// 3. ENVIAR DATOS (doPost)
+async function enviarAccion(payload) {
+    try {
+        // Ejecuta la petición en segundo plano
+        await fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Requerido para evitar problemas de CORS con Google Apps Script redirects
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        // Forzar actualización inmediata local tras la acción
+        setTimeout(cargarLista, 500); 
+    } catch (error) {
+        console.error("Error al enviar datos:", error);
+    }
+}
+
+function agregarItem() {
+    const texto = itemInput.value.trim();
+    if (!texto) return;
 
     const nuevoItem = {
-        id: Date.now().toString(),
-        producto: textoProducto,
-        comprado: "pendiente"
+        id: Date.now().toString(), // Genera un ID único basado en tiempo
+        producto: texto,
+        comprado: false // Inicia como "pendiente"
     };
 
-    // Quitar mensaje de lista vacía si existía
-    const emptyMsg = shoppingList.querySelector('.empty-msg');
-    if (emptyMsg) emptyMsg.remove();
+    itemInput.value = '';
+    enviarAccion(nuevoItem);
+}
 
-    renderizarArticulo(nuevoItem);
-    itemInput.value = ""; // Limpiar el cuadro rápido
-
-    // Enviar a la hoja de cálculo de fondo de forma silenciosa
-    await fetch(URL_BACKEND, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: nuevoItem.id, producto: nuevoItem.producto, comprado: false })
+function alternarEstado(id, producto, estaComprado) {
+    enviarAccion({
+        id: id,
+        producto: producto,
+        comprado: estaComprado
     });
 }
 
-// ESCUCHADORES DE EVENTOS
-addBtn.addEventListener("click", agregarNuevoProducto);
-itemInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") agregarNuevoProducto();
-});
+function eliminarItem(id) {
+    enviarAccion({
+        id: id,
+        accion: "delete"
+    });
+}
 
-// Cargar la lista actual en cuanto se abre la aplicación
-window.onload = cargarListaActual;
+// 4. INICIALIZACIÓN Y TIEMPO REAL (Polling)
+// Carga inicial al abrir la app
+cargarLista();
+
+// Bucle en tiempo real: Consulta la hoja de cálculo cada 3000ms (3 segundos)
+setInterval(cargarLista, 3000);
