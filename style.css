@@ -7,7 +7,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
 body {
@@ -19,7 +19,7 @@ body {
     padding: 20px;
 }
 
-/* REGLA CRUCIAL: Fuerza a los textos "add" y "delete" a convertirse en iconos reales */
+/* 🛠️ SOLUCIÓN PARA LOS ICONOS: Fuerza a las palabras a transformarse en símbolos */
 .material-icons {
     font-family: 'Material Icons' !important;
     font-weight: normal;
@@ -36,25 +36,24 @@ body {
 }
 
 /* ==========================================
-   CONTENEDOR PRINCIPAL DE LA APP
+   CONTENEDOR PRINCIPAL
    ========================================== */
 .app-container {
     background: #ffffff;
     width: 100%;
-    max-width: 480px;
-    padding: 25px;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    max-width: 450px;
+    padding: 20px;
+    border-radius: 20px;
 }
 
 .app-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .app-header h1 {
-    font-size: 28px;
-    color: #1e293b;
+    font-size: 32px;
+    color: #1a1a1a;
     font-weight: 600;
     margin-bottom: 15px;
 }
@@ -62,38 +61,38 @@ body {
 .image-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .image-container img {
-    max-width: 85%;
+    width: 100%;
+    max-width: 380px;
     height: auto;
-    object-fit: contain;
 }
 
 /* ==========================================
-   ZONA DE ENTRADA DE DATOS (INPUT & BOTÓN)
+   FORMULARIO DE ENTRADA (INPUT Y BOTÓN ADD)
    ========================================== */
 .input-container {
     display: flex;
-    gap: 12px;
+    align-items: center;
+    gap: 15px;
     margin-bottom: 25px;
 }
 
 #item-input {
     flex: 1;
-    padding: 16px;
-    border: 2px solid #e2e8f0;
+    padding: 18px 20px;
+    border: 1.5px solid #d1d5db;
     border-radius: 16px;
     font-size: 16px;
+    color: #333333;
     outline: none;
-    transition: border-color 0.2s ease;
-    background-color: #f8fafc;
+    background-color: #ffffff;
 }
 
-#item-input:focus {
-    border-color: #198754;
-    background-color: #ffffff;
+#item-input::placeholder {
+    color: #9ca3af;
 }
 
 #add-btn {
@@ -101,91 +100,68 @@ body {
     color: white;
     border: none;
     border-radius: 16px;
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-#add-btn:hover {
-    background-color: #146c43;
-    transform: scale(1.03);
 }
 
 /* ==========================================
-   ESTRUCTURA DE LA LISTA DE COMPRAS
+   LISTA DE COMPRAS (TARJETAS COMO LA FOTO 1)
    ========================================== */
 #shopping-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
 .todo-item {
     background: #f8fafc;
-    border: 1px solid #edf2f7;
-    padding: 16px;
+    border: 1px solid #f1f5f9;
+    padding: 20px;
     border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
 }
 
-.todo-item:hover {
-    background: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    border-color: #e2e8f0;
-}
-
-/* Checkbox estilizado integrado */
+/* Checkbox estilizado (Cuadrado morado de tu app) */
 .todo-item input[type="checkbox"] {
-    width: 22px;
-    height: 22px;
-    accent-color: #198754;
+    width: 24px;
+    height: 24px;
+    accent-color: #7c3aed; /* Color morado como se ve en la imagen original */
     cursor: pointer;
-    margin-right: 15px;
+    margin-right: 18px;
 }
 
-/* Texto del producto */
+/* Texto del Producto */
 .todo-item span {
     flex: 1;
-    font-size: 16px;
-    color: #334155;
-    font-weight: 500;
-    transition: color 0.2s ease;
+    font-size: 18px;
+    color: #1f2937;
+    font-weight: 400;
 }
 
-/* Estado completado (Tachado) */
-.todo-item.completed {
-    background: #f1f5f9;
-    opacity: 0.7;
-}
-
+/* Estilo si está completado */
 .todo-item.completed span {
     text-decoration: line-through;
-    color: #94a3b8;
+    color: #9ca3af;
 }
 
-/* Botón de eliminar (Icono de papelera) */
+/* Botón Delete (Ubicado a la derecha en color magenta/rojo sutil) */
 .delete-btn {
     background: none;
     border: none;
-    color: #ef4444; /* Rojo elegante */
+    color: #db2777; /* Tono magenta/rojo idéntico al de tu primera foto */
     cursor: pointer;
-    padding: 6px;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 4px 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.delete-btn:hover {
-    background-color: #fee2e2;
-    transform: scale(1.08);
 }
