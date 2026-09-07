@@ -110,9 +110,14 @@ function eliminarItem(id) {
     });
 }
 
-// 4. INICIALIZACIÓN Y TIEMPO REAL (Polling)
-// Carga inicial al abrir la app
-cargarLista();
+// Bucle automático para recuperar los datos cada 3 segundos
+setInterval(() => {
+    if (typeof cargarLista === 'function') {
+        cargarLista(); 
+    } else if (typeof obtenerDatos === 'function') {
+        obtenerDatos();
+    } else if (typeof recargarLista === 'function') {
+        recargarLista();
+    }
+}, 3000);
 
-// Bucle en tiempo real: Consulta la hoja de cálculo cada 3000ms (3 segundos)
-setInterval(cargarLista, 3000);
