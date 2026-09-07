@@ -16,7 +16,7 @@ async function cargarLista() {
     try {
         const response = await fetch(WEB_APP_URL);
         const datos = await response.json();
-        
+
         if (datos.error) {
             console.error("Error del backend:", datos.error);
             return;
@@ -35,38 +35,37 @@ async function cargarLista() {
 // 2. MOSTRAR ELEMENTOS EN PANTALLA
 function renderizarLista(items) {
     shoppingList.innerHTML = '';
-    
+
     items.forEach(item => {
         const li = document.createElement('li');
-        // Si está "en proceso", añade la clase completado
-        if (item.comprado === 'en proceso') {
-            li.classList.add('completed');
-        }
-        
-        // Checkbox
+        li.className = `todo-item ${item.comprado === 'en proceso' ? 'completed' : ''}`;
+
+        // 1. Crear el Checkbox
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = item.comprado === 'en proceso';
         checkbox.addEventListener('change', () => alternarEstado(item.id, item.producto, checkbox.checked));
 
-        // Texto
+        // 2. Crear el Texto del producto
         const span = document.createElement('span');
         span.textContent = item.producto;
-        if (checkbox.checked) {
-            span.style.textDecoration = 'line-through';
-        }
+        if (checkbox.checked) span.style.textDecoration = 'line-through';
 
-        // Botón Eliminar
+        // 3. Crear el Botón de eliminar
         const deleteBtn = document.createElement('button');
         deleteBtn.innerHTML = '<span class="material-icons">delete</span>';
         deleteBtn.className = 'delete-btn';
         deleteBtn.addEventListener('click', () => eliminarItem(item.id));
 
-        li.appendChild(checkbox);
-        li.appendChild(span);
-        li.appendChild(deleteBtn);
+        // 🔥 EL ORDEN DE ESTAS TRES LÍNEAS ES LO QUE DEFINE EL DISEÑO #2:
+        li.appendChild(checkbox);   // Primero se mete el checkbox (Izquierda)
+        li.appendChild(span);       // Luego el texto (Centro)
+        li.appendChild(deleteBtn);  // Al final el botón de borrar (Derecha)
+
         shoppingList.appendChild(li);
     });
+}
+
 }
 
 // 3. ENVIAR DATOS AL SERVIDOR (doPost)
@@ -79,7 +78,7 @@ async function enviarAccion(payload) {
             body: JSON.stringify(payload)
         });
         // Sincronizar inmediatamente tras una acción del usuario
-        setTimeout(cargarLista, 400); 
+        setTimeout(cargarLista, 400);
     } catch (error) {
         console.error("Error al enviar datos:", error);
     }
